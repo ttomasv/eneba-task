@@ -3,17 +3,14 @@
 {% block body %}
     <div>
         <form name="form" method="post" action="{{ path('save') }}">
-            <div>
-                <input style="width: 400px;" type="text" name="form[text]" value="{{ randomSentence }}" readonly />
-                <button type="submit">Issaugoti</button>
+            <h5>{{ randomSentence }}</h5>
+            <input hidden type="text" name="form[text]" value="{{ randomSentence }}" readonly />
+
+
+            <div class="mt-3">
+                <a class="btn btn-warning" href="">Kitas</a>
+                <button class="btn btn-success ml-2" type="submit">Issaugoti</button>
             </div>
         </form>
-
-
-
     </div>
-{% endblock %}
-
-
-{% block javascripts %}
 {% endblock %}

@@ -3,11 +3,17 @@
 {% block body %}
     <div>
         <div>
-            Sakinys: {{ sentence }}
+            <h5>{{ sentence }}</h5>
+
+            <div class="mt-3">
+                <input id="url" style="width: 200px;" value="{{ url }}" readonly>
+                <button id="copyBtn" class="btn btn-success ml-2">Kopijuoti</button>
+            </div>
+            <div>
+                <a href="/" class="btn btn-warning mt-3">Atgal</a>
+            </div>
         </div>
-        <div>
-            Nuoroda: <a href="{{ url }}">{{ url }}</a>
-        </div>
+
     </div>
 {% endblock %}
 
