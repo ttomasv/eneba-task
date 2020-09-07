@@ -2,11 +2,31 @@
 
 namespace App\Controller;
 
+use App\Entity\Sentence;
+use App\Repository\SentenceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+    /**
+     * @var SentenceRepository
+     */
+    private $sentenceRepository;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(SentenceRepository $sentenceRepository, EntityManagerInterface $entityManager) {
+
+        $this->sentenceRepository = $sentenceRepository;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/", name="main")
      */
@@ -47,6 +67,54 @@ class MainController extends AbstractController
 
         return $this->render('main/index.html.twig', [
             'randomSentence' => $sentence
+        ]);
+    }
+
+    /**
+     * @Route("/save", name="save")
+     * @param Request $request
+     * @return Response
+     */
+    public function getSentence(Request $request)
+    {
+        $sentence = new Sentence();
+
+        $form = $this->createFormBuilder($sentence)
+            ->add('text')
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $sentence = $form->getData();
+
+            $this->entityManager->persist($sentence);
+            $this->entityManager->flush();
+
+            return $this->render('main/generatedUrl.html.twig', [
+                'url' => 'http://localhost:8000/' . $sentence->getId(),
+                'sentence' => $sentence->getText(),
+            ]);
+        }
+        else
+            {
+                echo 'error';
+                exit;
+            }
+    }
+
+    /**
+     * @Route("/{id}", name="specific")
+     * @param int $id
+     * @return Response
+     */
+    public function find (int $id)
+    {
+        $sentence = $this->sentenceRepository->find($id);
+
+        return $this->render('main/specific.html.twig', [
+            'sentence' => $sentence->getText(),
         ]);
     }
 }
