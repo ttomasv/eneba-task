@@ -23,30 +23,16 @@ class MainControllerTest extends WebTestCase
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
 
-        $entityManager->expects($this->any())
-            ->method('getRepository')
-            ->willReturn($sentenceRepository);
-
         $test = new MainController($sentenceRepository,$entityManager);
 
-        $this->assertEquals("Oi tu išverstaakė karvė!", $test->findText(1));
+        $this->assertEquals("Oi tu išverstaakė karvė!", $test->findText(3));
     }
 
     public function testGenerateSentence()
     {
-        $sentence = new Sentence();
-
         $sentenceRepository = $this->createMock(SentenceRepository::class);
 
-        $sentenceRepository->expects($this->any())
-            ->method('find')
-            ->willReturn($sentence);
-
         $entityManager = $this->createMock(EntityManagerInterface::class);
-
-        $entityManager->expects($this->any())
-            ->method('getRepository')
-            ->willReturn($sentenceRepository);
 
         $test = new MainController($sentenceRepository, $entityManager);
 
