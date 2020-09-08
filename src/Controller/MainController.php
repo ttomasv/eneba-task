@@ -73,7 +73,7 @@ class MainController extends AbstractController
     /**
      * @Route("/save", name="save")
      * @param Request $request
-     * @return Response
+     * @return string
      */
     public function getSentence(Request $request)
     {
@@ -85,7 +85,7 @@ class MainController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
             $sentence = $form->getData();
 
@@ -99,8 +99,10 @@ class MainController extends AbstractController
         }
         else
             {
-                echo 'error';
-                exit;
+                return $this->render('main/generatedUrl.html.twig', [
+                    'url' => 'url not found',
+                    'sentence' => 'error: form is not submitted',
+                ]);
             }
     }
 
@@ -111,10 +113,25 @@ class MainController extends AbstractController
      */
     public function find (int $id)
     {
-        $sentence = $this->sentenceRepository->find($id);
+        $sentence = $this->findText($id);
 
         return $this->render('main/specific.html.twig', [
-            'sentence' => $sentence->getText(),
+            'sentence' => $sentence,
         ]);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function findText (int $id)
+    {
+        $sentence = $this->sentenceRepository->find($id);
+
+        if($sentence) {
+            return $sentence->getText();
+        } else {
+            return "Sentence with ID: " . $id . " does not exist!";
+        }
     }
 }
