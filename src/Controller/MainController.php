@@ -32,13 +32,28 @@ class MainController extends AbstractController
      */
     public function index()
     {
+        $sentence = $this->generateSentence();
+
+        return $this->render('main/index.html.twig', [
+            'randomSentence' => $sentence
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function generateSentence()
+    {
+        // Data
         $goesFirst = ["Oi tu", "Och tu", "Ach tu"];
         $goesSecond = ["aukštielninka", "stora", "skraidanti", "išverstaakė", "bjauri", "kvaila", "negraži", "bevertė"];
         $goesThird = ["rupūžė", "kiaulė", "karvė", "višta"];
 
+        // Sentence will contain 1 random string from 1st array
         $sentence = "";
         $sentence .= $goesFirst[array_rand($goesFirst)] . " ";
 
+        // Sentence will contain 1-3 random strings from 2nd array (words wont duplicate)
         $fromOneToThree = rand(1,3);
         $usedWords = [];
 
@@ -63,11 +78,10 @@ class MainController extends AbstractController
             array_push($usedWords, $temp);
         }
 
+        // Sentence will contain 1 random string from 3rd array
         $sentence .= $goesThird[array_rand($goesThird)] . "!";
 
-        return $this->render('main/index.html.twig', [
-            'randomSentence' => $sentence
-        ]);
+        return $sentence;
     }
 
     /**
